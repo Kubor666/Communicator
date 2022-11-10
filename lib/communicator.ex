@@ -22,6 +22,11 @@ defmodule Communicator do
     loop_acceptor(socket)
   end
 
+  defp communication(sender, receiver) do
+    read_line(sender)
+    write_line(receiver)
+  end
+
   defp serve(socket) do
     socket
     |> read_line()
