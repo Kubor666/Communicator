@@ -5,7 +5,8 @@ defmodule Communicator_Application do
 
     children = [
       {Task.Supervisor, name: Communicator.TaskSupervisor},
-      {Task, fn -> Communicator.accept(port) end}
+      {Task, fn -> Communicator.accept(port) end},
+      Rooms
     ]
 
     opts = [strategy: :one_for_one, name: Communicator.Supervisor]
