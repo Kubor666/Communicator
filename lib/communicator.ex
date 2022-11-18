@@ -16,31 +16,14 @@ defmodule Communicator do
   end
 
   defp loop_acceptor(socket) do
+    # Wait for socket connection
     {:ok, client} = :gen_tcp.accept(socket)
-    {:ok, pid} = Task.Supervisor.start_child(Communicator.TaskSupervisor, fn -> serve(client) end)
+
+    # Start serving the socket
+    {:ok, pid} = Task.Supervisor.start_child(Communicator.TaskSupervisor, fn -> Communicator.Server.serve(client) end)
+    IO.inspect(%{client: client, pid: pid})
+
     :ok = :gen_tcp.controlling_process(client, pid)
     loop_acceptor(socket)
-  end
-
-  defp communication(sender, receiver) do
-    read_line(sender)
-    write_line(receiver)
-  end
-
-  defp serve(socket) do
-    socket
-    |> read_line()
-    |> write_line(socket)
-
-    serve(socket)
-  end
-
-  defp read_line(socket) do
-    {:ok, data} = :gen_tcp.recv(socket, 0)
-    data
-  end
-
-  defp write_line(line, socket) do
-    :gen_tcp.send(socket, line)
   end
 end
