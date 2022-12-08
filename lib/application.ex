@@ -2,6 +2,7 @@ defmodule Communicator_Application do
 
   def start(_type, _args) do
     port = String.to_integer(System.get_env("PORT") || "4040")
+    Communicator.Join_to_Server.new_room_list
 
     children = [
       {Task.Supervisor, name: Communicator.TaskSupervisor},
