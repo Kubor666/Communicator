@@ -1,36 +1,29 @@
 defmodule Communicator.Join_to_Server do
 
-  def new_room_list() do
-    room_list = ["main"]
+  def join_to_server_stage_1(client) do
+    select_option(client)
   end
 
-  def join_to_server(client, room_list) do
-    :gen_tcp.send(client, "Please tell me what server you want to join: ")
-    IO.inspect(room_list)
+  defp join_to_server_stage_2(client) do
     name = read_line(client)
-    room_list = [name | room_list]
-    IO.inspect(room_list)
+    Rooms_List.update_rooms(name)
+    |>IO.inspect()
     :gen_tcp.send(client, "Succesfully joined to server #{name}")
 
     name
   end
 
-  def show_rooms(client, room_list) do
-    :gen_tcp.send(client, room_list)
-    :gen_tcp.send(client, "Please select the room from the list above")
-
-    name = read_line(client)
-
-    :gen_tcp.send(client, "Succesfully joined to server #{name}")
-  end
-
-  def select_option(client, room_list) do
+  defp select_option(client) do
     :gen_tcp.send(client, "Press 1 if you want to see existing rooms, press 2 if you want to create a new one")
 
     option = read_line(client)
     cond do
-      option == "1" -> Communicator.Join_to_Server.show_rooms(client, room_list)
-      true -> select_option(client, room_list)
+      option == "1\n" ->
+         rooms = Rooms_List.get_rooms()
+         :gen_tcp.send(client, rooms)
+         :gen_tcp.send(client, "Please tell me what server you want to join: ")
+         join_to_server_stage_2(client)
+      true -> select_option(client)
     end
   end
 

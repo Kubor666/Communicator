@@ -1,6 +1,6 @@
 defmodule Communicator.Server do
   def serve(client) do
-    room_name = Communicator.Join_to_Server.join_to_server(client, [])
+    room_name = Communicator.Join_to_Server.join_to_server_stage_1(client)
 
     Rooms.update_users(room_name, self())
 
