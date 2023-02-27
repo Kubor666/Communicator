@@ -27,6 +27,12 @@ defmodule Communicator.Join_to_Server do
     end
   end
 
+  def get_nickname(client) do
+    :gen_tcp.send(client, "Please enter your nickname: ")
+    nickname = read_line(client)
+    {:ok, String.trim(nickname)}
+  end
+
   defp read_line(client) do
     {:ok, data} = :gen_tcp.recv(client, 0)
 
