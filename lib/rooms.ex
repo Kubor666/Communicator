@@ -18,6 +18,14 @@ defmodule Rooms do
     |> Map.update(room_name, [pid], fn pids -> [pid | pids] end)
   end
 
+  def remove_user(room_name, pid) do
+    Agent.update(__MODULE__, fn state ->
+      Map.update(state, room_name, [], fn pids ->
+        List.delete(pids, pid)
+      end)
+    end)
+  end
+
   defp get_pids(state, room_name) do
     state
     |> Map.get(room_name, [])
