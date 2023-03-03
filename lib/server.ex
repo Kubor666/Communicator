@@ -14,7 +14,9 @@ defmodule Communicator.Server do
     |> Rooms.get_users()
     |> Enum.each(fn {pid, nickname} ->
       if nickname != sender_nickname do
-        Process.send(pid, {:send_message, "#{nickname}: #{message}"}, [])
+        Process.send(pid, {:send_message, "#{sender_nickname}: #{message}"}, [])
+      else
+        nil
       end
     end)
   end

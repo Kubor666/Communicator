@@ -7,7 +7,6 @@ defmodule Communicator.Join_to_Server do
     name = read_line(client)
 
     Rooms_List.update_rooms(name)
-    |> IO.inspect()
 
     :gen_tcp.send(client, "Succesfully joined to chatroom #{name}")
     name
